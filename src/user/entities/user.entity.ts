@@ -1,11 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { UserRole } from '../../common/enums/user-role.enum';
+import { BaseEntity } from '../../common/types/base.entity';
+import { BookLendingStatus } from '../../book/entities/book-lending-status.entity';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class User extends BaseEntity {
   @Column()
   name: string;
 
@@ -20,4 +19,7 @@ export class User {
 
   @Column({ default: UserRole.USER })
   role: UserRole;
+
+  @OneToMany(() => BookLendingStatus, (lendingStatus) => lendingStatus.user)
+  lendingStatuses: BookLendingStatus[];
 }

@@ -10,17 +10,11 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { JwtPayload } from '../common/types/jwt-payload.type';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
-import { Repository } from 'typeorm';
 
 export function RolesGuard(...roles: UserRole[]): Type<CanActivate> {
   @Injectable()
   class AuthGuardMixin implements CanActivate {
-    constructor(
-      private readonly jwtService: JwtService,
-      @InjectRepository(User) private readonly userRepository: Repository<User>,
-    ) {}
+    constructor(private readonly jwtService: JwtService) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
       const request = context.switchToHttp().getRequest<Request>();
@@ -30,14 +24,17 @@ export function RolesGuard(...roles: UserRole[]): Type<CanActivate> {
         throw new UnauthorizedException();
       }
 
-      const tokenData: JwtPayload = await this.jwtService.verifyAsync(token);
+      try {
+        const tokenData: JwtPayload = await this.jwtService.verifyAsync(token);
+        if (!roles || roles.length === 0) {
+          return true;
+        }
 
-      if (!roles || roles.length === 0) {
-        return true;
-      }
-
-      if (tokenData.role && roles.includes(tokenData.role)) {
-        return true;
+        if (tokenData.role && roles.includes(tokenData.role)) {
+          return true;
+        }
+      } catch {
+        throw new UnauthorizedException();
       }
 
       throw new UnauthorizedException();

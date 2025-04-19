@@ -1,21 +1,23 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
-import { Repository } from 'typeorm';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
+import type { DeepPartial, Repository } from 'typeorm';
+import type { RegisterDto } from './dto/register.dto';
+import type { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import { JwtPayload } from '../common/types/jwt-payload.type';
+import { UserService } from '../user/user.service';
+import { UserRole } from '../common/enums/user-role.enum';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto, role = UserRole.USER) {
     const existingEmail = await this.userRepository.findOne({
       where: { email: registerDto.email },
     });
@@ -24,38 +26,27 @@ export class AuthService {
       throw new BadRequestException('Email already exists');
     }
 
-    registerDto.password = await this.hashPassword(registerDto.password);
+    const user = {
+      ...registerDto,
+      role,
+    } satisfies DeepPartial<User>;
 
-    await this.userRepository.save(registerDto);
+    await this.userService.createUser(user);
   }
 
   async login(loginDto: LoginDto) {
-    const user = await this.validateUser(loginDto.email, loginDto.password);
+    const user = await this.userService.validateUser(
+      loginDto.email,
+      loginDto.password,
+    );
 
     if (!user) {
       throw new BadRequestException('Invalid credentials');
     }
 
     return {
-      access_token: this.generateToken(user),
+      accessToken: this.generateToken(user),
     };
-  }
-
-  private async hashPassword(password: string) {
-    const salt = await bcrypt.genSalt();
-    return await bcrypt.hash(password, salt);
-  }
-
-  private async validateUser(
-    email: string,
-    password: string,
-  ): Promise<User | null> {
-    const user = await this.userRepository.findOne({ where: { email } });
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return user;
-    }
-
-    return null;
   }
 
   private generateToken(user: User) {
