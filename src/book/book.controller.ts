@@ -6,6 +6,7 @@ import {
   Request,
   Delete,
   Param,
+  Get,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -24,6 +25,11 @@ export class BookController {
   @UseGuards(RolesGuard(UserRole.ADMIN))
   createBook(@Body() createBookDto: CreateBookDto) {
     return this.bookService.createBook(createBookDto);
+  }
+
+  @Get()
+  getAllBooks() {
+    return this.bookService.getAllBooks();
   }
 
   @Post('request-lending')

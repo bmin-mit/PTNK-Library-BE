@@ -21,6 +21,10 @@ export class BookService {
     return this.bookRepository.save(book);
   }
 
+  async getAllBooks() {
+    return this.bookRepository.find({});
+  }
+
   async requestLending(user: User, requestDto: RequestBookLendingDto) {
     const book = await this.bookRepository.findOne({
       where: { id: requestDto.bookId },
