@@ -7,6 +7,9 @@ export class Book extends BaseEntity {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  author?: string;
+
   @Column({ default: 0 })
   quantity: number;
 
@@ -16,8 +19,20 @@ export class Book extends BaseEntity {
   @Column({ nullable: true })
   position?: string; // position of the book in the library
 
+  @Column({ nullable: true })
+  publisher?: string;
+
+  @Column({ nullable: true })
+  publishYear?: number;
+
+  @Column({ nullable: true })
+  isbn?: string;
+
+  @Column({ nullable: true })
+  language?: string;
+
   @OneToMany(
-    (type) => BookLendingStatus,
+    () => BookLendingStatus,
     (bookLendingStatus) => bookLendingStatus.book,
   )
   lendingStatuses: BookLendingStatus[];

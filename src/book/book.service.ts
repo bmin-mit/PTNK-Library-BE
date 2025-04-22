@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { Repository } from 'typeorm';
@@ -28,11 +24,15 @@ export class BookService {
     return this.bookRepository.save(book);
   }
 
-  async getAllBooks() {
+  getAllBooks() {
     return this.bookRepository.find({});
   }
 
-  async getAllLendingRequests() {
+  getBookById(id: number) {
+    return this.bookRepository.findOne({ where: { id } });
+  }
+
+   getAllLendingRequests() {
     return this.bookLendingStatusRepository.find({
       where: {
         status: LendingStatus.REQUESTED,
@@ -40,16 +40,14 @@ export class BookService {
     });
   }
 
-  async getLendingRequests(user: User) {
-    const lendingStatuses = await this.bookLendingStatusRepository.find({
+   getLendingRequests(user: User) {
+    return this.bookLendingStatusRepository.find({
       where: {
         user: { id: user.id },
         status: LendingStatus.REQUESTED,
       },
       relations: ['book'],
     });
-
-    return lendingStatuses;
   }
 
   async getAllLendingStatus() {
