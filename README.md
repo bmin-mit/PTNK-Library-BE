@@ -1,65 +1,55 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# PTNK Library - Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Tech stack 
+- [NestJS](https://nestjs.com/)
+- [TypeORM](https://typeorm.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Docker](https://www.docker.com/)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Yêu cầu và hướng dẫn cài đặt:
+- [NodeJS 22 (LTS)](https://nodejs.org/en)
+- [Yarn 4.9.x (stable)](https://yarnpkg.com/getting-started/install)
+- [Docker Desktop](https://docs.docker.com/desktop/)
 
 ## Project setup
 
 ```bash
-$ yarn install
+git clone https://github.com/bmin-mit/PTNK-Library-BE
+
+cd PTNK-Library-BE
+yarn
 ```
 
 ## Docker
 
-Setup PostgreSQL database using Docker.
+### Setup PostgreSQL cho lần đầu sử dụng
 
 ```bash
-# Create and run docker container
 docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password postgres
-
-# Access container's shell
 docker exec -it postgres bash
-
-# Access PostgreSQL shell
-psql -U postgres
+psql -U postgres # Nhập password là `password`
 ```
 
-Create a new database
+Trong prompt của `psql` tạo database cho ứng dụng:
 
 ```postgresql
 CREATE DATABASE "ptnk-library";
 ```
 
-## Compile and run the project
+Ở những lần tiếp theo, chỉ cần khởi chạy container `postgres` đã tạo thông qua Docker Desktop
+
+## Build và run production
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+yarn build
+yarn run start:prod
 ```
+
+Server sẽ được khởi chạy ở http://localhost:5001
+
+Tài khoản mặc định của admin là:
+- Email: `admin@system.com`
+- Password: `password`
 
 ## Documentation
 
