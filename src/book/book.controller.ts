@@ -32,11 +32,6 @@ export class BookController {
     return this.bookService.getAllBooks();
   }
 
-  @Get(':id')
-  getBookById(@Param('id') id: number) {
-    return this.bookService.getBookById(id);
-  }
-
   @Post('request-lending')
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard(UserRole.USER))
