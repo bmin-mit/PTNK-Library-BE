@@ -60,7 +60,6 @@ export class BookController {
     return this.bookService.deleteBook(id);
   }
 
-  // Admin endpoint for book
   @Get('all-lending-status')
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard(UserRole.ADMIN))
